@@ -60,6 +60,7 @@
     }
   },
   "dependencies": {
+    "class-transformer": "^0.5.1",
     "reflect-metadata": "^0.2.2",
     "sitka": "^1.1.1",
     "typescript-template": "file:"
