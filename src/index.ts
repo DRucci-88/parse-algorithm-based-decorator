@@ -1,22 +1,30 @@
-'use strict';
+"use strict";
 
-import { Logger } from 'sitka';
+import { Logger } from "sitka";
+import { Dog, parseStringToObject } from "./Parse";
 
 export class Example {
-	/* Private Instance Fields */
+  /* Private Instance Fields */
 
-	private _logger: Logger;
+  private _logger: Logger;
 
-	/* Constructor */
+  /* Constructor */
 
-	constructor() {
-		this._logger = Logger.getLogger({ name: this.constructor.name });
-	}
+  constructor() {
+    this._logger = Logger.getLogger({ name: this.constructor.name });
+  }
 
-	/* Public Instance Methods */
+  /* Public Instance Methods */
 
-	public exampleMethod(param: string): string {
-		this._logger.debug('Received: ' + param);
-		return param;
-	}
+  public exampleMethod(param: string): string {
+    this._logger.debug("Received: " + param);
+    return param;
+  }
 }
+
+const input = "abcdefghaaa";
+console.log(input);
+
+const parsed = parseStringToObject(input, new Dog());
+
+console.log(parsed);
