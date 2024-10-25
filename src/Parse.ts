@@ -46,29 +46,38 @@ export function NUMBER(metadata: NumberMetaData) {
   };
 }
 
-export function parseStringToObject(input: string, targetClass: any): any {
-  // const obj = new targetClass();
+export function parseStringToObject<T>(
+  input: string,
+  targetClass: new () => T
+): T {
+  const obj = new targetClass();
   const fields: Array<{ propertyKey: string; metadata: FieldMetaData }> =
-    Reflect.getMetadata(MetaData.Field, targetClass);
+    Reflect.getMetadata(MetaData.Field, obj as Object);
 
   let index = 0;
 
   fields.forEach(({ propertyKey, metadata }) => {
     const { type, length, trim } = metadata;
-    let value: string = input.substring(index, index + length);
 
-    if (trim === "LTRIM") value = value.trimStart();
-    if (trim === "RTRIM") value = value.trimEnd();
-    // let result = "";
+    let value: string = "";
+
     switch (type) {
       case "STRING":
-        targetClass[propertyKey] = value;
+        value = input.substring(index, index + length);
+        if (trim === "LTRIM") value = value.trimStart();
+        if (trim === "RTRIM") value = value.trimEnd();
+
+        obj[propertyKey] = value;
         break;
       case "NUMBER":
+        value = input.substring(index, index + length);
+        if (trim === "LTRIM") value = value.trimStart();
+        if (trim === "RTRIM") value = value.trimEnd();
+
         const numbers: Array<{
           propertyKey: string;
           metadata: NumberMetaData;
-        }> = Reflect.getMetadata(MetaData.Number, targetClass);
+        }> = Reflect.getMetadata(MetaData.Number, obj as Object);
         console.log(numbers);
         const number:
           | {
@@ -79,21 +88,25 @@ export function parseStringToObject(input: string, targetClass: any): any {
           return number.propertyKey === propertyKey;
         });
         console.log(number);
-        targetClass[propertyKey] = parseFieldNumber(value, number);
-        // targetClass[propertyKey] = 901;
+        obj[propertyKey] = parseNumber(value, number);
+        // obj[propertyKey] = 901;
+        break;
+      case "LIST":
+        value = input.substring(index, input.length);
+
         break;
       default:
         break;
     }
 
-    // targetClass[propertyKey] = value;
+    // obj[propertyKey] = value;
     index += length;
   });
 
-  return targetClass;
+  return obj;
 }
 
-function parseFieldNumber(
+function parseNumber(
   input: string,
   number:
     | {
@@ -114,16 +127,6 @@ function parseFieldNumber(
   return value;
 }
 
-// function parseStringToObject<T>(
-//   input: string,
-//   targetClass: ClassConstructor<T>
-// ): T {
-//   const obj = new targetClass();
-//   const fields = Reflect.getMetadata("fields", targetClass as Object);
-
-//   return obj;
-// }
-
 export class Dog {
   @FIELD({ length: 4, type: "STRING", trim: "RTRIM" })
   name: string;
@@ -135,8 +138,20 @@ export class Dog {
   @NUMBER({ type: "DECIMAL", decimal: 2 })
   age: number;
 
+  // @FIELD({ length: 0, type: "LIST", trim: "LTRIM" })
+  // favorite: Array<Food>;
+
   constructor() {}
 }
+
+// class Food {
+//   @FIELD({ length: 5, type: "STRING", trim: "RTRIM" })
+//   name: string;
+
+//   @FIELD({ length: 7, type: "NUMBER", trim: "LTRIM" })
+//   @NUMBER({ decimal: 4, type: "DECIMAL" })
+//   price: number;
+// }
 
 function Logger(target: Object, propertyKey: string) {
   console.log(`Target ${target}`);

@@ -25,6 +25,6 @@ export class Example {
 const input = "abcdefgh111";
 console.log(input);
 
-const parsed = parseStringToObject(input, new Dog());
+const parsed = parseStringToObject(input, Dog);
 
 console.log(parsed);
