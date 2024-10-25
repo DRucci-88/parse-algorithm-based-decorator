@@ -22,7 +22,7 @@ export class Example {
   }
 }
 
-const input = "abcdefghaaa";
+const input = "abcdefgh111";
 console.log(input);
 
 const parsed = parseStringToObject(input, new Dog());
