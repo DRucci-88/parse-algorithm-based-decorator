@@ -3,6 +3,7 @@ import "reflect-metadata";
 enum MetaData {
   Field = "field",
   Number = "number",
+  List = "list",
 }
 
 interface FieldMetaData {
@@ -18,6 +19,10 @@ interface NumberMetaData {
   signLength?: number;
 }
 
+interface ListMetaData {
+  typeClass: any;
+}
+
 export function FIELD(metadata: FieldMetaData) {
   return function (target: Object, propertyKey: string) {
     if (!Reflect.hasMetadata(MetaData.Field, target))
@@ -26,8 +31,8 @@ export function FIELD(metadata: FieldMetaData) {
     const fields: Array<{ propertyKey: string; metadata: FieldMetaData }> =
       Reflect.getMetadata(MetaData.Field, target);
     fields.push({ propertyKey, metadata });
-    console.log("fields");
-    console.log(fields);
+    // console.log("fields");
+    // console.log(fields);
     Reflect.defineMetadata(MetaData.Field, fields, target);
   };
 }
@@ -40,9 +45,23 @@ export function NUMBER(metadata: NumberMetaData) {
     const numbers: Array<{ propertyKey: string; metadata: NumberMetaData }> =
       Reflect.getMetadata(MetaData.Number, target);
     numbers.push({ propertyKey, metadata });
-    console.log("numbers");
-    console.log(numbers);
+    // console.log("numbers");
+    // console.log(numbers);
     Reflect.defineMetadata(MetaData.Number, numbers, target);
+  };
+}
+
+export function LIST(metadata: ListMetaData) {
+  return function (target: Object, propertyKey: string) {
+    if (!Reflect.hasMetadata(MetaData.List, target))
+      Reflect.defineMetadata(MetaData.List, [], target);
+
+    const lists: Array<{ propertyKey: string; metadata: ListMetaData }> =
+      Reflect.getMetadata(MetaData.List, target);
+    lists.push({ propertyKey, metadata });
+    console.log("lists");
+    console.log(lists);
+    Reflect.defineMetadata(MetaData.List, lists, target);
   };
 }
 
@@ -50,16 +69,25 @@ export function parseStringToObject<T>(
   input: string,
   targetClass: new () => T
 ): T {
-  const obj = new targetClass();
-  const fields: Array<{ propertyKey: string; metadata: FieldMetaData }> =
-    Reflect.getMetadata(MetaData.Field, obj as Object);
+  console.log(targetClass);
+  const obj = new targetClass() as Object;
+  const fields: Array<{ propertyKey: string; metadata: FieldMetaData }> | null =
+    Reflect.getMetadata(MetaData.Field, obj);
+  console.log("fields");
+  console.log(fields);
+
+  const lists: Array<{ propertyKey: string; metadata: ListMetaData }> | null =
+    Reflect.getMetadata(MetaData.List, obj);
+
+  console.log("lists");
+  console.log(lists);
 
   let index = 0;
 
-  fields.forEach(({ propertyKey, metadata }) => {
-    const { type, length, trim } = metadata;
+  let value: string = "";
 
-    let value: string = "";
+  fields?.forEach(({ propertyKey, metadata }) => {
+    const { type, length, trim } = metadata;
 
     switch (type) {
       case "STRING":
@@ -68,6 +96,7 @@ export function parseStringToObject<T>(
         if (trim === "RTRIM") value = value.trimEnd();
 
         obj[propertyKey] = value;
+        index += length;
         break;
       case "NUMBER":
         value = input.substring(index, index + length);
@@ -89,21 +118,53 @@ export function parseStringToObject<T>(
         });
         console.log(number);
         obj[propertyKey] = parseNumber(value, number);
-        // obj[propertyKey] = 901;
+        index += length;
         break;
-      case "LIST":
-        value = input.substring(index, input.length);
-
-        break;
+      // case "LIST":
+      //   value = input.substring(index, input.length);
+      //   // const lists: Array<{ propertyKey: string; metadata: ListMetaData }> =
+      //   break;
       default:
         break;
     }
-
-    // obj[propertyKey] = value;
-    index += length;
   });
 
-  return obj;
+  lists?.forEach(({ propertyKey, metadata }) => {
+    console.log("!!! lists.forEach !!!");
+    console.log(propertyKey);
+    const { typeClass } = metadata;
+    console.log(typeClass);
+    const itemInstance = new typeClass();
+    console.log(itemInstance);
+    const itemFields: Array<{
+      propertyKey: string;
+      metadata: FieldMetaData;
+    }> = Reflect.getMetadata(MetaData.Field, itemInstance);
+    console.log(itemFields);
+    let itemLength = 0;
+    for (const itemField of itemFields) {
+      itemLength += itemField.metadata.length;
+    }
+    console.log(itemLength);
+
+    obj[propertyKey] = [];
+
+    value = input.substring(index, index + 4);
+    console.log(value);
+    index += 4;
+    const count: number = Number(value);
+    console.log(count);
+    for (let i = 0; i < count; i++) {
+      const itemString = input.substring(index, index + itemLength);
+      console.log(`itemString [${itemString}]`);
+      const parsedItem = parseStringToObject(itemString, typeClass);
+      console.log(parsedItem);
+      obj[propertyKey].push(parsedItem);
+    }
+    index += itemLength;
+  });
+
+  return obj as T;
 }
 
 function parseNumber(
@@ -127,6 +188,17 @@ function parseNumber(
   return value;
 }
 
+export class Food {
+  @FIELD({ length: 2, type: "STRING", trim: "RTRIM" })
+  name: string;
+
+  @FIELD({ length: 1, type: "STRING", trim: "RTRIM" })
+  description: string;
+  // @FIELD({ length: 7, type: "NUMBER", trim: "LTRIM" })
+  // @NUMBER({ decimal: 4, type: "DECIMAL" })
+  // price: number;
+}
+
 export class Dog {
   @FIELD({ length: 4, type: "STRING", trim: "RTRIM" })
   name: string;
@@ -138,20 +210,12 @@ export class Dog {
   @NUMBER({ type: "DECIMAL", decimal: 2 })
   age: number;
 
-  // @FIELD({ length: 0, type: "LIST", trim: "LTRIM" })
-  // favorite: Array<Food>;
+  @FIELD({ length: 0, type: "LIST", trim: "LTRIM" })
+  @LIST({ typeClass: Food })
+  favorite: Array<Food>;
 
   constructor() {}
 }
-
-// class Food {
-//   @FIELD({ length: 5, type: "STRING", trim: "RTRIM" })
-//   name: string;
-
-//   @FIELD({ length: 7, type: "NUMBER", trim: "LTRIM" })
-//   @NUMBER({ decimal: 4, type: "DECIMAL" })
-//   price: number;
-// }
 
 function Logger(target: Object, propertyKey: string) {
   console.log(`Target ${target}`);
