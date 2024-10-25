@@ -1,20 +1,16 @@
 {
-  "name": "typescript-template",
-  "version": "1.0.7",
-  "description": "A complete Node.js project template using TypeScript and following general best practices.",
+  "name": "parse-string-based-annotation",
+  "version": "0.0.1",
+  "description": "",
   "keywords": [
     "typescript",
-    "template"
+    "parse algorthm"
   ],
   "author": {
-    "name": "Chris Wells",
-    "url": "https://chriswells.io"
+    "name": "Le Rucco",
+    "url": "https://github.com/DRucci-88"
   },
-  "license": "BSD-3-Clause",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/chriswells0/node-typescript-template.git"
-  },
+  "license": "MIT Licecse",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -61,6 +57,7 @@
   },
   "dependencies": {
     "class-transformer": "^0.5.1",
+    "parse-string-based-annotation": "file:",
     "reflect-metadata": "^0.2.2",
     "sitka": "^1.1.1",
     "typescript-template": "file:"
