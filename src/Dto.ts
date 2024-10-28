@@ -20,11 +20,19 @@ export class Dog {
 
   @FIELD({ length: 3, type: "NUMBER", trim: "LTRIM" })
   @NUMBER({ type: "DECIMAL", decimal: 2 })
-  age: number;
+  price: number;
 
   @FIELD({ length: 0, type: "LIST", trim: "LTRIM" })
   @LIST({ typeClass: Food })
   favorite: Array<Food>;
+
+  @FIELD({ length: 3, type: "NUMBER", trim: "LTRIM" })
+  @NUMBER({ type: "LONG", decimal: 0 })
+  age: number;
+
+  @FIELD({ length: 0, type: "LIST", trim: "LTRIM" })
+  @LIST({ typeClass: Food })
+  favorite111: Array<Food>;
 
   constructor() {}
 }

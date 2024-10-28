@@ -23,11 +23,10 @@ export class Example {
   }
 }
 
-const input = "abcdefgh1130002akuka9";
+const input = "AsepBudi9870002akuka90110001leo";
 console.log(input);
 
 const parsed = parseStringToObject(input, Dog);
 
 console.log("RESULT");
 console.log(parsed);
-console.log(parsed.favorite);
