@@ -24,7 +24,7 @@ export class Dog {
 
   @FIELD({ length: 0, type: "LIST", trim: "LTRIM" })
   @LIST({ typeClass: Food })
-  favorite: Array<Food>;
+  favoriteFood: Array<Food>;
 
   @FIELD({ length: 3, type: "NUMBER", trim: "LTRIM" })
   @NUMBER({ type: "LONG", decimal: 0 })
@@ -32,7 +32,7 @@ export class Dog {
 
   @FIELD({ length: 0, type: "LIST", trim: "LTRIM" })
   @LIST({ typeClass: Food })
-  favorite111: Array<Food>;
+  favoriteDrink: Array<Food>;
 
   constructor() {}
 }

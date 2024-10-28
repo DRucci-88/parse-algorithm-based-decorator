@@ -183,6 +183,8 @@ function parseNumber(input: string, number: NumberParam): number {
 
   switch (number.metadata.type) {
     case "DECIMAL":
+    case "DOUBE":
+    case "FLOAT":
       value = Number(
         input.slice(0, -1 * decimal) + "." + input.slice(-1 * decimal)
       );
@@ -191,6 +193,8 @@ function parseNumber(input: string, number: NumberParam): number {
       }
       return value;
     case "LONG":
+    case "INT":
+    case "SHORT":
       value = Number(input);
       return value;
     default:
