@@ -1,7 +1,8 @@
 "use strict";
 
 import { Logger } from "sitka";
-import { Dog, parseStringToObject } from "./Parse";
+import { parseStringToObject } from "./Parse";
+import { Dog } from "./Dto";
 
 export class Example {
   /* Private Instance Fields */
@@ -22,7 +23,7 @@ export class Example {
   }
 }
 
-const input = "abcdefgh1130001akukau";
+const input = "abcdefgh1130002akuka9";
 console.log(input);
 
 const parsed = parseStringToObject(input, Dog);
