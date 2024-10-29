@@ -28,15 +28,27 @@ export class Example {
 // const input = "AsepBudi9870002akuka90110001leo";
 // console.log(input);
 
+// const input =
+//   "Avanza    Ride In Comfort     024200000000" +
+//   "00000004" +
+//   "Potenza   Performance Boost   0323600000Murah Meriah Banget " +
+//   "Turanza   Fuel Efficiency     0323600000Durability Patent   " +
+//   "Alenza    CUVs & SUVs         0323600000Favorite BapakBapack" +
+//   "Duravis   Durable & Endurance 0323600000Bisa menyelam laut  ";
+
 const input =
-  "Avanza    Ride In Comfort     02420000000000000004" +
+  "Avanza    " +
+  "00000004" +
   "Potenza   Performance Boost   0323600000Murah Meriah Banget " +
   "Turanza   Fuel Efficiency     0323600000Durability Patent   " +
   "Alenza    CUVs & SUVs         0323600000Favorite BapakBapack" +
-  "Duravis   Durable & Endurance 0323600000Bisa menyelam laut  ";
+  "Duravis   Durable & Endurance 0323600000Bisa menyelam laut  " +
+  "Ride In Comfort     024200000000";
 
 const parsed = convertStringToObject(input, Car);
 // const parsed = parseStringToObject(input, Dog);
 
 console.log("RESULT");
 console.log(parsed);
+
+console.log(parsed?.name);
