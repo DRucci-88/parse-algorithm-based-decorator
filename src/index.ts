@@ -41,9 +41,9 @@ const input =
   "Avanza    " +
   "00000004" +
   "Potenza   Performance Boost   0323600000Murah Meriah Banget " +
-  "Turanza   Fuel Efficiency     0323600000Durability Patent   " +
-  "Alenza    CUVs & SUVs         0323600000Favorite BapakBapack" +
-  "Duravis   Durable & Endurance 0323600000Bisa menyelam laut  " +
+  "Turanza   Fuel Efficiency     0323600093Durability Patent   " +
+  "Alenza    CUVs & SUVs         0323600087Favorite BapakBapack" +
+  "Duravis   Durable & Endurance 0323600090Bisa menyelam laut  " +
   "Ride In Comfort     024200000000";
 
 // const leput =
@@ -80,5 +80,3 @@ console.log(
 );
 
 input === carString ? console.log("SUCCESS") : console.log("NOT MATCH");
-
-if (input == carString) console.log("1");

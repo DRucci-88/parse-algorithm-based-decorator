@@ -76,7 +76,7 @@ export function convertStringToObject<T>(
           fieldList: FieldListParam<Object>;
         } = { obj, input, index, fieldList };
 
-        if (parseList(param) === false) return null;
+        if (parseFieldList(param) === false) return null;
         obj[propertyKey] = param.obj[propertyKey];
         index = param.index;
       default:
@@ -95,7 +95,7 @@ function parseFieldNumber(
 
   switch (fieldNumber.metadata.type) {
     case "DECIMAL":
-    case "DOUBE":
+    case "DOUBLE":
     case "FLOAT":
       const decimal = fieldNumber?.metadata.decimal ?? 0;
       value = Number(
@@ -118,7 +118,7 @@ function parseFieldNumber(
   }
 }
 
-function parseList(param: {
+function parseFieldList(param: {
   obj: Object;
   input: string;
   index: number;

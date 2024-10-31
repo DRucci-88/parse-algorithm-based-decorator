@@ -13,7 +13,7 @@ export interface FieldMeta {
 }
 
 export interface FieldNumberMeta {
-  type: "DECIMAL" | "DOUBE" | "FLOAT" | "INT" | "LONG" | "SHORT";
+  type: "DECIMAL" | "DOUBLE" | "FLOAT" | "INT" | "LONG" | "SHORT";
   decimal: number;
   pointLength?: number;
   signLength?: number;
