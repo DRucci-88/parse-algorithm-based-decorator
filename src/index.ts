@@ -5,6 +5,7 @@ import { Logger } from "sitka";
 // import { Dog } from "./Dto";
 import { convertStringToObject } from "./telegram/Decoder";
 import { Car } from "./dto/Car";
+import { convertObjectToString } from "./telegram/Encoder";
 
 export class Example {
   /* Private Instance Fields */
@@ -45,10 +46,39 @@ const input =
   "Duravis   Durable & Endurance 0323600000Bisa menyelam laut  " +
   "Ride In Comfort     024200000000";
 
-const parsed = convertStringToObject(input, Car);
+// const leput =
+//   "Avanza    " +
+//   "00000004" +
+//   "Potenza   Performance Boost   0003236000Murah Meriah Banget " +
+//   "Turanza   Fuel Efficiency     0003236000Durability Patent   " +
+//   "Alenza    CUVs & SUVs         0003236000Favorite BapakBapack" +
+//   "Duravis   Durable & Endurance 0003236000Bisa menyelam laut  " +
+//   "Ride In Comfort     000242000000";
+
+// console.log(`[${leput}]`);
+// const input =
+// "Avanza    00000004Potenza   Performance Boost   0000032360Murah Meriah Banget Turanza   Fuel Efficiency     0000032360Durability Patent   Alenza    CUVs & SUVs         0000032360Favorite BapakBapackDuravis   Durable & Endurance 0000032360Bisa menyelam laut  Ride In Comfort     000002420000";
+console.log(`[${input}]`);
+const carParsed: Car | null = convertStringToObject(input, Car);
 // const parsed = parseStringToObject(input, Dog);
 
 console.log("RESULT");
-console.log(parsed);
+console.log(carParsed);
 
-console.log(parsed?.name);
+console.log(carParsed?.name);
+
+console.log(
+  "------------------------------------------------------------------------------------"
+);
+
+const carString = convertObjectToString(carParsed!);
+
+console.log(`[${carString}]`);
+
+console.log(
+  "------------------------------------------------------------------------------------"
+);
+
+input === carString ? console.log("SUCCESS") : console.log("NOT MATCH");
+
+if (input == carString) console.log("1");

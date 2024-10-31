@@ -39,6 +39,7 @@ export function convertStringToObject<T>(
     switch (type) {
       case "STRING":
         tempSubset = input.substring(index, index + length);
+
         if (trim === "LTRIM") return null;
         tempSubset = tempSubset.trimEnd();
 
@@ -47,8 +48,9 @@ export function convertStringToObject<T>(
         break;
       case "NUMBER":
         tempSubset = input.substring(index, index + length);
-        if (trim === "LTRIM") tempSubset = tempSubset.trimStart();
-        else if (trim === "RTRIM") tempSubset = tempSubset.trimEnd();
+
+        if (trim === "RTRIM") return null;
+        tempSubset = tempSubset.trimStart();
 
         const fieldNumber: FieldNumberParam | undefined = fieldNumbers?.find(
           (fieldNumber) => {
@@ -57,7 +59,7 @@ export function convertStringToObject<T>(
         );
 
         if (fieldNumber === undefined) return null;
-        obj[propertyKey] = parseFieldNumber(tempSubset, fieldNumber) ?? "NaN";
+        obj[propertyKey] = parseFieldNumber(tempSubset, fieldNumber);
         index += length;
         break;
       case "LIST":
@@ -100,13 +102,16 @@ function parseFieldNumber(
         tempSubset.slice(0, -1 * decimal) + "." + tempSubset.slice(-1 * decimal)
       );
       if (isNaN(value)) {
-        /// TODO Handling Edge Cases
+        return null;
       }
       return value;
     case "LONG":
     case "INT":
     case "SHORT":
       value = Number(tempSubset);
+      if (isNaN(value)) {
+        return null;
+      }
       return value;
     default:
       return null;
